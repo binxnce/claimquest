@@ -1,0 +1,58 @@
+
+{
+    "name": "@claimquest/monorepo",
+    "version": "1.0.0",
+    "keywords": [
+      "ethereum",
+      "react",
+      "yarn"
+    ],
+    "private": true,
+    "scripts": {
+      "web:build": "yarn workspace @claimquest/web build",
+      "web:start": "yarn workspace @claimquest/web start",
+      "web:test": "yarn workspace @claimquest/web test",
+
+      "dev": "yarn workspace @claimquest/web dev",
+      "chain": "yarn workspace @claimquest/hardhat chain",
+      "fork": "yarn workspace @claimquest/hardhat fork",
+      "node": "yarn workspace @claimquest/hardhat chain",
+      "test": "yarn workspace @claimquest/hardhat test",
+      "start": "yarn workspace @claimquest/web start",
+      "compile": "yarn workspace @claimquest/hardhat compile",
+      "deploy": "yarn workspace @claimquest/hardhat deploy",
+      "watch": "yarn workspace @claimquest/hardhat watch",
+      "accounts": "yarn workspace @claimquest/hardhat accounts",
+      "balance": "yarn workspace @claimquest/hardhat balance",
+      "send": "yarn workspace @claimquest/hardhat send",
+      "ipfs": "yarn workspace @claimquest/web ipfs",
+      "surge": "yarn workspace @claimquest/web surge",
+      "generate": "yarn workspace @claimquest/hardhat generate",
+      "account": "yarn workspace @claimquest/hardhat account",
+      "mine": "cd packages/hardhat && npx hardhat mine",
+      "wallet": "cd packages/hardhat && npx hardhat wallet",
+      "fundedwallet": "cd packages/hardhat && npx hardhat fundedwallet",
+      "flatten": "cd packages/hardhat && npx hardhat flatten",
+      "graph-run-node": "cd docker/graph-node && docker-compose up",
+      "graph-remove-node": "cd docker/graph-node && docker-compose down",
+      "graph-prepare": "mustache packages/subgraph/config/config.json packages/subgraph/src/subgraph.template.yaml > packages/subgraph/subgraph.yaml",
+      "graph-codegen": "yarn workspace @claimquest/subgraph graph codegen",
+      "graph-build": "yarn workspace @claimquest/subgraph graph build",
+      "graph-create-local": "yarn workspace @claimquest/subgraph graph create --node http://localhost:8020/ eth-boilerplate/your-contract",
+      "graph-remove-local": "yarn workspace @claimquest/subgraph graph remove --node http://localhost:8020/ eth-boilerplate/your-contract",
+      "graph-deploy-local": "yarn workspace @claimquest/subgraph graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 eth-boilerplate/your-contract",
+      "graph-ship-local": "yarn graph-prepare && yarn graph-codegen && yarn graph-deploy-local",
+      "deploy-and-graph": "yarn deploy && yarn graph-ship-local"
+    },
+    "workspaces": {
+      "packages": [
+        "packages/*"
+      ],
+      "nohoist": [
+        "**/@graphprotocol/graph-ts",
+        "**/@graphprotocol/graph-ts/**",
+        "**/hardhat",
+        "**/hardhat/**"
+      ]
+    }
+  }
