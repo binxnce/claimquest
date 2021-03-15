@@ -8,7 +8,7 @@ export function Layout({ children }) {
   const triedEager = useEagerConnect()
   useInactiveListener(!triedEager)
   return (
-    <div className="flex items-center justify-center bg-purple-200">
+    <div className="flex items-center justify-center bg-white-200">
       <div className="font-sans bg-grey-lighter flex flex-col min-h-screen w-full">
         <Header></Header>
         <Content>{children}</Content>

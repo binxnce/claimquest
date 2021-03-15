@@ -2,17 +2,17 @@ import React from 'react'
 
 export function Footer() {
   return (
-    <div className="flex-none bg-white border-t">
+    <div className="flex-none bg-gray-800 border-t">
       <div className="container mx-auto px-4">
         <div className="md:flex justify-between items-center text-sm">
           <div className="text-center md:text-left py-3 md:py-4 border-b md:border-b-0">
-            <a href="#" className="no-underline text-grey-dark mr-4">
+            <a href="#" className="no-underline text-white mr-4">
               Home
             </a>
-            <a href="#" className="no-underline text-grey-dark mr-4">
+            <a href="#" className="no-underline text-white mr-4">
               About
             </a>
-            <a href="#" className="no-underline text-grey-dark">
+            <a href="#" className="no-underline text-white">
               Legal &amp; Privacy
             </a>
           </div>
@@ -37,7 +37,7 @@ export function Footer() {
                 </a>
               </div>
             </div>
-            <div className="text-grey text-center md:mr-4">&copy; {new Date().getFullYear()} {process.env.APP_NAME}</div>
+            <div className="text-white text-center md:mr-4">&copy; {new Date().getFullYear()} {process.env.APP_NAME}</div>
           </div>
         </div>
       </div>
