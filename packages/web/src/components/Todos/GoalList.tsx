@@ -9,7 +9,7 @@ export function GoalList() {
       <ul className="pt-8">
         {goals.map((goal) => {
           return (
-            <li className="pb-12 grid grid-cols-1 divide-y-2 divide-pink-300" key={goal.id}>
+            <li className="pb-12 grid grid-cols-1 divide-y-2 divide-gray-400" key={goal.id}>
               <div className="">
                 <span className="text-xl text-gray-500 uppercase">GOAL: </span>
                 <span className=" text-2xl">{goal.name}</span>
