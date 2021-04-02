@@ -1,23 +1,31 @@
-import { Contract} from '@ethersproject/contracts'
-import { Web3Provider } from '@ethersproject/providers'
-import React, { createContext, useMemo, useEffect, ReactNode, useReducer, useState } from 'react'
-import { Signer } from "@ethersproject/abstract-signer";
-import { useWeb3React } from '@web3-react/core';
+import { Contract } from '@ethersproject/contracts'
+import { Provider, Web3Provider } from '@ethersproject/providers'
+import React, { createContext, useMemo, useEffect, ReactNode, useState } from 'react'
+import { Signer } from '@ethersproject/abstract-signer'
+import { useWeb3React } from '@web3-react/core'
+import { Greeter, ClaimQuest } from '../../../../hardhat/types'
 
+interface ContractsObject {
+  greeter?: Greeter
+  claimQuest?: ClaimQuest
+}
 const stateInitialValue = {
-  contracts: new Map<string, Contract>()
+  contracts: {}
 }
 
-export const ContractContext = createContext(stateInitialValue)
+export const ContractContext = createContext<{contracts: ContractsObject}>(stateInitialValue)
 
 interface Props {
   children: ReactNode
 }
 
+
 const loadContract = (contractName: string, signer: Signer | Web3Provider) => {
   const newContract = new Contract(
     require(`../../contracts/${contractName}.address.js`),
     require(`../../contracts/${contractName}.abi.js`),
+    // Note has to do with versions mismatch between different ethers libraries
+    // @ts-ignore
     signer
   )
   try {
@@ -26,7 +34,14 @@ const loadContract = (contractName: string, signer: Signer | Web3Provider) => {
   } catch (e) {
     console.log(e)
   }
-  return newContract
+  switch (contractName) {
+    case 'Greeter':
+      return (newContract as unknown) as Greeter
+    case 'ClaimQuest':
+      return (newContract as unknown) as ClaimQuest
+    default:
+      return newContract
+  }
 }
 
 async function loadContracts(providerOrSigner, setContracts) {
@@ -46,23 +61,25 @@ async function loadContracts(providerOrSigner, setContracts) {
       }
 
       const contractList = require('../../contracts/contracts.js')
-      const newContracts = new Map<string, Contract>()
+      const newContracts = {}
       contractList.forEach(contractName => {
-        newContracts.set(contractName, loadContract(contractName, signer))
-      }, {})
+        newContracts[contractName[0].toLowerCase() + contractName.slice(1)] = loadContract(contractName, signer)
+      })
+
       setContracts(newContracts)
     } catch (e) {
       console.log('ERROR LOADING CONTRACTS!!', e)
     }
   }
 }
+
 export const ContractsProvider = ({ children }: Props) => {
   const { library: providerOrSigner } = useWeb3React()
 
-  const [contracts, setContracts] = useState<Map<string, Contract>>(new Map())
+  const [contracts, setContracts] = useState<ContractsObject>({})
   useEffect(() => {
     loadContracts(providerOrSigner, setContracts)
   }, [providerOrSigner])
 
-  return <ContractContext.Provider value={{contracts}}>{children}</ContractContext.Provider>
+  return <ContractContext.Provider value={{ contracts }}>{children}</ContractContext.Provider>
 }

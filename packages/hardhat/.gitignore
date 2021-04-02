@@ -8,9 +8,6 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
 
 # production
 /build
@@ -30,7 +27,8 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-# cache
+# hardhat
 artifacts
 cache
 deployments
+types

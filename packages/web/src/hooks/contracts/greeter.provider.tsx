@@ -2,9 +2,8 @@ import React, { createContext, useMemo, useEffect, ReactNode, Dispatch, useConte
 import { useWeb3React } from '@web3-react/core'
 import { ContractContext } from './contracts.provider'
 import { GreeterService } from '../../services'
-import { Web3Provider } from '@ethersproject/providers'
-import { Contract } from '@ethersproject/contracts'
 import { useInterval } from '../helpers'
+import { Greeter } from '../../../../hardhat/types'
 
 interface Props {
   children: ReactNode
@@ -37,12 +36,8 @@ const actionsIntialValue = {
 export const GreeterContractState = createContext(stateInitialValue)
 export const GreeterContractActions = createContext(actionsIntialValue)
 
-const loadGreeting = async (
-  providerOrSigner: Web3Provider,
-  contracts: Map<string, Contract>,
-  dispatch: Dispatch<IGreeterAction>
-) => {
-  return await GreeterService.getGreeting(providerOrSigner, contracts)
+const loadGreeting = async (contract: Greeter, dispatch: Dispatch<IGreeterAction>) => {
+  return await GreeterService.getGreeting(contract)
     .then(result => {
       return dispatch({ type: 'SET_GREETING', payload: { greeting: result } })
     })
@@ -53,7 +48,10 @@ const loadGreeting = async (
 
 export const GreeterContractProvider = ({ children }: Props) => {
   const { library: providerOrSigner } = useWeb3React()
-  const { contracts } = useContext(ContractContext)
+  // It depends on the main contracts provider
+  const {
+    contracts: { greeter }
+  } = useContext(ContractContext)
 
   // Greeter state
   const [state, dispatch] = useReducer(
@@ -70,13 +68,13 @@ export const GreeterContractProvider = ({ children }: Props) => {
   )
   // Initial data loading
   useEffect(() => {
-    loadGreeting(providerOrSigner, contracts, dispatch)
-  }, [providerOrSigner, contracts])
+    loadGreeting(greeter, dispatch)
+  }, [providerOrSigner, greeter])
 
   // Polled data based on delay
   useInterval(() => {
-    if (providerOrSigner && contracts.size > 0) {
-      loadGreeting(providerOrSigner, contracts, dispatch)
+    if (providerOrSigner && greeter) {
+      loadGreeting(greeter, dispatch)
     }
   }, 1337)
 
@@ -84,7 +82,7 @@ export const GreeterContractProvider = ({ children }: Props) => {
   const actions = useMemo(() => {
     return {
       setGreeting: (greeting: string) => {
-        GreeterService.setGreeting(providerOrSigner, contracts, greeting)
+        GreeterService.setGreeting(greeter, greeting)
           .then(() => {
             if (state.greeting !== greeting) {
               dispatch({ type: 'SET_GREETING', payload: { greeting } })

@@ -7,8 +7,9 @@ import "@tenderly/hardhat-tenderly";
 import "@nomiclabs/hardhat-etherscan";
 import setupDebug from "debug";
 import { JsonRpcSigner } from "@ethersproject/providers";
+import '@typechain/hardhat';
 
-const debug = setupDebug("@eth-boilerplate/hardhat");
+const debug = setupDebug("claimquest/hardhat");
 
 const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 
@@ -40,7 +41,7 @@ const config = {
     hardhat: {
       // Notice this here? Metamask bug
       // https://hardhat.org/metamask-issue.html
-      chainId: 1337
+      chainId: 1337,
     },
     localhost: {
       url: "http://localhost:8545",
@@ -112,6 +113,10 @@ const config = {
     // Obtain one at https://etherscan.io/
     apiKey: "PSW8C433Q667DVEX5BCRMGNAH9FSGFZ7Q8",
   },
+  typechain: {
+    outDir: 'types',
+    target: 'ethers-v5'
+  }
 };
 
 task("wallet", "Create a wallet (pk) link", async (_, { ethers }) => {
