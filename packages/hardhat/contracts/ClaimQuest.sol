@@ -7,7 +7,10 @@ import "./TodoList.sol";
 // Storage heavy implementation
 contract ClaimQuest {
 
+    
+
     mapping(address => TodoList) public tasks;
+    mapping(address => uint) public balanceBySender;
     mapping(string => address) public pools;
 
     constructor(){
@@ -19,8 +22,23 @@ contract ClaimQuest {
         // for each pool call claim
     }
 
-// ideas
-// get permision to spend money
-// get permission to only spend x amount of money
-// self-sufficient smart contracts (the money that they earn helps keeps the protocol going)
+    // Function to receive Ether. msg.data must be empty
+    receive() external payable {
+        balanceBySender[msg.sender] =  balanceBySender[msg.sender] + msg.value;
+    }
+
+    // Fallback function is called when msg.data is not empty
+    fallback() external payable {
+        balanceBySender[msg.sender] =  balanceBySender[msg.sender] + msg.value;
+    }
+
+    // get contract balance
+    function getTotalBalance() public view returns (uint) {
+        return address(this).balance;
+    }
+
+    // get balance by sender
+    function getBalance() public view returns (uint) {
+        return balanceBySender[msg.sender];
+    }
 }
